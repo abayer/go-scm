@@ -7,6 +7,7 @@ package stash
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -40,6 +41,7 @@ func (s *webhookService) Parse(req *http.Request, fn scm.SecretFunc) (scm.Webhoo
 	}
 
 	var hook scm.Webhook
+	fmt.Printf("got data %s", string(data))
 	switch req.Header.Get("X-Event-Key") {
 	case "repo:refs_changed":
 		hook, err = s.parsePushHook(data)
