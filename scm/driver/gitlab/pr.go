@@ -162,10 +162,14 @@ func (s *pullService) AssignIssue(ctx context.Context, repo string, number int, 
 		allAssignees[assignee.ID] = struct{}{}
 	}
 	for _, l := range logins {
-		u, _, err := s.client.Users.FindLogin(ctx, l)
+		u, resp, err := s.client.Users.FindLogin(ctx, l)
+		logrus.Warnf("find login resp: %+v", resp)
+
 		if err != nil {
+			logrus.WithError(err).Warnf("trying to look up user %s", l)
 			return nil, err
 		}
+		logrus.Warnf("user info: %+v", u)
 		allAssignees[u.ID] = struct{}{}
 	}
 
