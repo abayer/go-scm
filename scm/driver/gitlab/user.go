@@ -11,6 +11,7 @@ import (
 
 	"github.com/jenkins-x/go-scm/scm"
 	"github.com/jenkins-x/go-scm/scm/driver/internal/null"
+	"github.com/sirupsen/logrus"
 )
 
 type userService struct {
@@ -33,6 +34,7 @@ func (s *userService) FindLogin(ctx context.Context, login string) (*scm.User, *
 	if len(out) != 1 || !strings.EqualFold(out[0].Username, login) {
 		return nil, nil, scm.ErrNotFound
 	}
+	logrus.Warnf("RAW USER: %+v", out[0])
 	return convertUser(out[0]), res, err
 }
 
