@@ -5,7 +5,9 @@
 package gitlab
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strconv"
@@ -13,6 +15,7 @@ import (
 	"time"
 
 	"github.com/jenkins-x/go-scm/scm"
+	"github.com/sirupsen/logrus"
 )
 
 type pullService struct {
@@ -179,6 +182,11 @@ func (s *pullService) setAssignees(ctx context.Context, repo string, number int,
 		AssigneeIDs: ids,
 	}
 	path := fmt.Sprintf("api/v4/projects/%s/merge_requests/%d", encode(repo), number)
+
+	logrus.Warnf("SET ASSIGNEES PATH: %s", path)
+	buf := new(bytes.Buffer)
+	json.NewEncoder(buf).Encode(in)
+	logrus.Warnf("BODY: %s", buf.String())
 
 	return s.client.do(ctx, "PUT", path, in, nil)
 }
