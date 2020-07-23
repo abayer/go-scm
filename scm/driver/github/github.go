@@ -18,6 +18,7 @@ import (
 
 	"github.com/jenkins-x/go-scm/scm"
 	githubql "github.com/shurcooL/githubv4"
+	"github.com/sirupsen/logrus"
 )
 
 // Abort requests that don't return in 5 mins. Longest graphql calls can
@@ -122,7 +123,11 @@ func (c *wrapper) doRequest(ctx context.Context, req *scm.Request, in, out inter
 		req.Header["Content-Type"] = []string{"application/json"}
 		req.Body = buf
 	}
-
+	if strings.HasSuffix(req.Path, "/hooks") {
+		buf := new(bytes.Buffer)
+		json.NewEncoder(buf).Encode(in)
+		logrus.Warnf("BODY: %s", buf.String())
+	}
 	// execute the http request
 	res, err := c.Client.Do(ctx, req)
 	if err != nil {
