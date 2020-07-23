@@ -360,6 +360,7 @@ func TestRepositoryHookCreate(t *testing.T) {
 
 	gock.New("https://api.github.com").
 		Post("/repos/octocat/hello-world/hooks").
+		File("testdata/create_hook.json").
 		Reply(201).
 		Type("application/json").
 		SetHeaders(mockHeaders).
@@ -369,6 +370,16 @@ func TestRepositoryHookCreate(t *testing.T) {
 		Name:       "drone",
 		Target:     "https://example.com",
 		Secret:     "topsecret",
+		Events: scm.HookEvents{
+			Branch:             false,
+			Issue:              false,
+			IssueComment:       false,
+			PullRequest:        true,
+			PullRequestComment: false,
+			Push:               true,
+			ReviewComment:      false,
+			Tag:                false,
+		},
 		SkipVerify: true,
 	}
 

@@ -1,0 +1,13 @@
+{
+  "name": "web",
+  "events": [
+    "push",
+    "pull_request"
+  ],
+  "active": true,
+  "config": {
+    "url": "https://example.com",
+    "secret": "topsecret",
+    "content_type": "json"
+  }
+}
